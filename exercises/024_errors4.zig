@@ -23,7 +23,7 @@ pub fn main() void {
     // makeJustRight()'s returned error union (for now).
     const a: u32 = makeJustRight(44) catch 0;
     const b: u32 = makeJustRight(14) catch 0;
-    const c: u32 = makeJustRight(4) catch 0;
+    const c: u32 = makeJustRight(4) catch 10;
 
     std.debug.print("a={}, b={}, c={}\n", .{ a, b, c });
 }
@@ -59,7 +59,9 @@ fn fixTooSmall(n: u32) MyNumberError!u32 {
     // If we get a TooSmall error, we should return 10.
     // If we get any other error, we should return that error.
     // Otherwise, we return the u32 number.
-    return detectProblems(n) ???;
+    return detectProblems(n) catch |err| {
+        return err;
+    };
 }
 
 fn detectProblems(n: u32) MyNumberError!u32 {
